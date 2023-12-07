@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import logo from "../assets/logobaru.png";
 import axios from "axios";
 
@@ -30,7 +31,7 @@ const registerScreens = () => {
 
     //send a post request to the backend API
     axios
-      .post("http://192.168.251.243:8000/register", user)
+      .post("http://172.16.0.204:8000/register", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registrasi Sukses!");
@@ -44,6 +45,7 @@ const registerScreens = () => {
       });
   };
   return (
+    <KeyboardAwareScrollView>
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
@@ -221,6 +223,7 @@ const registerScreens = () => {
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </KeyboardAwareScrollView>
   );
 };
 

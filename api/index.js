@@ -13,9 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const jwt = require("jsonwebtoken");
-app.listen(port, "http://192.168.251.243:8000", () => {
-  console.log("Server is running on port 8000");
-});
 
 mongoose
   .connect("mongodb+srv://mgunturnn:mgunturnn@cluster0.7fdknnh.mongodb.net/", {
@@ -23,15 +20,14 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Terkoneksi ke MongoDB");
+    console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.log("Gagal terkoneksi ke MongoDB", err);
+    console.log("Failed Connected to MongoDB", err);
   });
-
-app.listen(port, () => {
-  console.log("Server sedang berjalan di port 8000");
-});
+  app.listen(port, () => {
+    console.log("Server is running on port 8000");
+  });
 
 const User = require("./models/user");
 const Order = require("./models/order");
@@ -52,16 +48,15 @@ const sendVerificationEmail = async (email, verificationToken) => {
     from: "amazon.com",
     to: email,
     subject: "Email",
-    text: `Silakan klik link berikut untuk memverifikasi akun email Anda!: http://192.168.177.243:8000/verify/${verificationToken}`,
+    text: `Silakan klik link berikut untuk memverifikasi akun email Anda!: http://localhost:8000/verify/${verificationToken}`,
   };
 
   //send the email
-  try{
+  try {
     await transporter.sendMail(mailOptions);
-  } catch(error) {
+  } catch (error) {
     console.log("Gagal mengirim email verifikasi!", error);
   }
-
 };
 
 //endpoint to register in the app
@@ -72,7 +67,7 @@ app.post("/register", async (req, res) => {
     //check if email are registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already registered!" });
+      return res.status(400).json({ message: "Email sudah ada!" });
     }
 
     //create new user
@@ -93,24 +88,59 @@ app.post("/register", async (req, res) => {
 });
 
 //endpoint to verify the email
-app.get("/verify/:token",async(req,res) => {
-    try{
-        const token = req.params.token;
+app.get("/verify/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
 
-        //find the user with the given verification token
-        const user = await User.findOne({verificationToken: token});
-        if(!user){
-            return res.status(404).json({message:"Token Verifikasi Tidak Valid!"});
-        }
-
-        //mark the user as verified
-        user.verified = true;
-        user.verificationToken = undefined;
-
-        await user.save();
-
-        res.status(200).json({message:"Sukses memverifikasi email!"});
-    } catch(error) {
-        res.status(500).json({message:"Gagal memverifikasi email!"});
+    //find the user with the given verification token
+    const user = await User.findOne({ verificationToken: token });
+    if (!user) {
+      return res.status(404).json({ message: "Token Verifikasi Tidak Valid!" });
     }
-})
+
+    //mark the user as verified
+    user.verified = true;
+    user.verificationToken = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Sukses memverifikasi email!" });
+  } catch (error) {
+    res.status(500).json({ message: "Gagal memverifikasi email!" });
+  }
+});
+
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+
+  return secretKey;
+};
+
+const secretKey = generateSecretKey();
+
+// endpoint to login
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    //check if the user is already logged in
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "Email dan Password Tidak Ditemukan!" });
+    }
+
+    //check if the password is correct
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Password Salah" });
+    }
+
+    //generate a token
+    const token = jwt.sign({ userId: user._id }, secretKey);
+
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ message: "Login Gagal!" });
+  }
+});

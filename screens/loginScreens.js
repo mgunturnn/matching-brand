@@ -1,4 +1,3 @@
-// menit 39:33 / 6:43:07
 import {
   StyleSheet,
   Text,
@@ -8,23 +7,63 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/logobaru.png";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const loginScreens = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+
+        if (token) {
+          navigation.replace("Main");
+        }
+      } catch (err) {
+        console.log("error message", err);
+      }
+    };
+    checkLoginStatus();
+  }, []);
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+    };
+
+    //send a post request to the backend API
+    axios
+      .post("http://172.16.0.204:8000/login", user)
+      .then((response) => {
+        console.log(response);
+        const token = response.data.token;
+        AsyncStorage.setItem("authToken", token);
+        navigation.replace("Main");
+      })
+      .catch((error) => {
+        Alert.alert("Failed to Login", "Password or Email is Incorrect");
+        console.log(error);
+      });
+  };
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
     >
       <View>
-        <Image style={{ width: 150, height: 100, marginTop: 50 }} source={logo} />
+        <Image
+          style={{ width: 150, height: 100, marginTop: 50 }}
+          source={logo}
+        />
       </View>
 
       <KeyboardAvoidingView>
@@ -128,20 +167,35 @@ const loginScreens = () => {
         <View style={{ marginTop: 50 }} />
 
         <Pressable
+          onPress={handleLogin}
           style={{
             width: 200,
             backgroundColor: "#A36361",
             borderRadius: 6,
             marginLeft: "auto",
             marginRight: "auto",
-            padding: 15
+            padding: 15,
           }}
         >
-          <Text style={{textAlign: "center", color: "white", fontSize: 16, fontWeight: "bold"}}>Login</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: "white",
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </Text>
         </Pressable>
 
-        <Pressable onPress={() => navigation.navigate("Register")} style={{marginTop: 15}}>
-            <Text style={{textAlign:"center", color: "#A36361", fontSize: 16}}>Don't have an account? Sign Up</Text>
+        <Pressable
+          onPress={() => navigation.navigate("Register")}
+          style={{ marginTop: 15 }}
+        >
+          <Text style={{ textAlign: "center", color: "#A36361", fontSize: 16 }}>
+            Don't have an account? Sign Up
+          </Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
