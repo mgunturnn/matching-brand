@@ -13,12 +13,28 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/CartReducer";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const ProductInfoScreen = () => {
   const route = useRoute();
   const { width } = Dimensions.get("window");
   const navigation = useNavigation;
+  const [addedToCart, setAddedToCart] = useState(false); // edited at critoe
   const height = (width * 100) / 100;
+  const dispatch = useDispatch(); // edited at critoe
+  const addItemToCart = (item)=>{
+    setAddedToCart(true);
+    dispatch(addToCart(item));
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 60000);
+  }; // modified at critoe
+  const cart = useSelector((state) => state.cart.cart); // edited at critoe
+  console.log(cart);
+  
   return (
     <ScrollView
       style={{ marginTop: 55, flex: 1, backgroundColor: "white" }}
@@ -70,7 +86,7 @@ const ProductInfoScreen = () => {
                 justifyContent: "space-between",
               }}
             >
-              <View
+              {/* <View
                 style={{
                   width: 40,
                   height: 40,
@@ -89,9 +105,9 @@ const ProductInfoScreen = () => {
                     fontSize: 12,
                   }}
                 >
-                  20% off
+               
                 </Text>
-              </View>
+              </View> */}
 
               <View
                 style={{
@@ -138,7 +154,7 @@ const ProductInfoScreen = () => {
         </Text>
 
         <Text style={{ fontSize: 18, fontWeight: "600", marginTop: 6 }}>
-          $ {route?.params?.price}
+          Rp. {route?.params?.price}
         </Text>
       </View>
 
@@ -189,6 +205,7 @@ const ProductInfoScreen = () => {
       </Text>
 
       <Pressable
+        onPress={() => addItemToCart(route?.params?.item)} // edited at critoe
         style={{
           borderColor:"#A36361",
           borderWidth:1,
@@ -200,7 +217,13 @@ const ProductInfoScreen = () => {
           marginVertical: 10,
         }}
       >
+      {addedToCart ? (
+        <View>
+          <Text>Added to Cart</Text>
+        </View>
+      ) : (
         <Text>Add to Cart</Text>
+      )}
       </Pressable>
 
       <Pressable
