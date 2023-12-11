@@ -31,7 +31,7 @@ const registerScreens = () => {
 
     //send a post request to the backend API
     axios
-      .post("http://192.168.1.109:8000/register", user)
+      .post("http://192.168.1.23:8000/register", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registrasi Sukses!");
@@ -41,7 +41,7 @@ const registerScreens = () => {
       })
       .catch((error) => {
         Alert.alert("Registrasi Gagal!");
-        console.log("registration failed", error);
+        console.log(error);
       });
   };
   return (
