@@ -10,7 +10,7 @@ import React, { useEffect, useContext, useState, useCallback } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { UserType } from "../UserContext";
 import axios from "axios";
 
@@ -34,9 +34,16 @@ const AddAddressScreen = () => {
       console.log("error", error);
     }
   };
+  // refresh the addresses when we navigate back
+  useFocusEffect(
+    useCallback(() => {
+      fetchAddresses();
+    }, [])
+  );
   console.log("addresses", addresses);
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 50 }}>
+      
       <View
         style={{
           backgroundColor: "#D3A29D",

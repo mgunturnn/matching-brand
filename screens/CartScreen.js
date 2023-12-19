@@ -16,6 +16,7 @@ import {
   incrementQuantity,
   removeFromCart,
 } from "../redux/CartReducer";
+import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -33,6 +34,7 @@ const CartScreen = () => {
   const deleteItem = (item) => {
     dispatch(removeFromCart(item));
   };
+  const navigation = useNavigation();
 
   return (
     <>
@@ -101,6 +103,7 @@ const CartScreen = () => {
         <Text style={{ marginHorizontal: 10 }}>EMI details available</Text>
 
         <Pressable
+          onPress={() => navigation.navigate("Confirm")}
           style={{
             backgroundColor: "#FFC72C",
             padding: 10,
