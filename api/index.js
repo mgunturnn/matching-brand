@@ -164,7 +164,7 @@ app.post("/addresses", async (req, res) => {
 
     //save the updated user in te backend
     await user.save();
-    
+
     res.status(200).json({ message: "Address created Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error addding address" });

@@ -9,7 +9,7 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import logo from "../assets/logobaru.png";
@@ -20,6 +20,8 @@ import ProductItem from "../components/ProductItem";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserType } from "../UserContext";
 
 const HomeScreen = () => {
   const list = [
@@ -229,12 +231,18 @@ const HomeScreen = () => {
   const [products, setProducts] = useState([]);
   const navigation = useNavigation();
   const [open, setOpen] = useState([]);
+  const [addresses, setAddresses] = useState([]);
+  const { userId, setUserId } = useContext(UserType);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  console.log(selectedAddress);
   const [category, setCategory] = useState("men's clothing");
   const [items, setItems] = useState([
     { label: "Men's clothing", value: "men's clothing" },
     { label: "jewelery", value: "jewelery" },
     { label: "women's clothing", value: "women's clothing" },
   ]);
+
+  // edited at cw
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -255,6 +263,38 @@ const HomeScreen = () => {
   // edited at critoe
   const cart = useSelector((state) => state.cart.cart);
   const [modalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    if (userId) {
+      fetchAddresses();
+    }
+  }, [userId, modalVisible]);
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await axios.get(
+        `http://192.168.33.243:8000/addresses/${userId}`
+      );
+      const { addresses } = response.data;
+
+      setAddresses(addresses);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+
+  // console.log(userId);
+  // console.log("addresses", addresses);
 
   return (
     <>
@@ -313,9 +353,13 @@ const HomeScreen = () => {
             <Entypo name="location-pin" size={24} color="#A36361" />
 
             <Pressable>
-              <Text style={{ fontSize: 13, color: "#A36361" }}>
-                Deliver to Bandung - Jawa Barat
-              </Text>
+              {selectedAddress ? (
+                <Text>
+                  Deliver to {selectedAddress?.name} - {selectedAddress?.street}
+                </Text>
+              ) : (
+                <Text style={{fontSize:13, fontWeight: "500"}}>Deliver to Bandung, Jawa Barat</Text>
+              )}
             </Pressable>
           </Pressable>
 
@@ -554,7 +598,48 @@ const HomeScreen = () => {
             </Text>
           </View>
 
-          <ScrollView>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {addresses?.map((item, index) => (
+              <Pressable
+              onPress={() => setSelectedAddress(item)}
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderColor: "#D0D0D0",
+                  borderWidth: 1,
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 3,
+                  marginRight: 15,
+                  marginTop: 10,
+                  backgroundColor: selectedAddress === item ? "#FBCEB1" : "white"
+                }}
+              >
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 3 }}
+                >
+                  <Text style={{ fonstSize: 13, fontWeight: "bold" }}>
+                    {item?.name}
+                  </Text>
+                  <Entypo name="location-pin" size={24} color="black" />
+                </View>
+
+                <Text style={{ width: 130, fontSize: 13, textAlign: "center" }}>
+                  {item?.houseNo}, {item?.landmark}
+                </Text>
+                {/*numberOfLines={1}*/}
+
+                <Text style={{ width: 130, fontSize: 13, textAlign: "center" }}>
+                  {item?.street}
+                </Text>
+
+                <Text style={{ width: 130, fontSize: 13, textAlign: "center" }}>
+                  Bandung, Jawa Barat
+                </Text>
+              </Pressable>
+            ))}
+
             <Pressable
               onPress={() => {
                 setModalVisible(false);
@@ -585,21 +670,27 @@ const HomeScreen = () => {
             </Pressable>
           </ScrollView>
           <View style={{ flexDirection: "column", gap: 7, marginBottom: 30 }}>
-
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+            >
               <Entypo name="location-pin" size={24} color="black" />
               <Text style={{ color: "#0066b2", fontWeight: "400" }}>
-                Masukan Alamat Manual
+                Set to Fake Location
               </Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-              <MaterialIcons name="location-searching" size={24} color="black" />
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+            >
+              <MaterialIcons
+                name="location-searching"
+                size={24}
+                color="black"
+              />
               <Text style={{ color: "#0066b2", fontWeight: "400" }}>
-                Gunakan Alamat Sekarang
+                Use My Current Location
               </Text>
             </View>
-
           </View>
         </ModalContent>
       </BottomModal>
