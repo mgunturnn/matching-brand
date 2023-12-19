@@ -94,12 +94,12 @@ const stackNavigator = () => {
           component={ProductInfoScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="Address"
           component={AddAddressScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="Add"
           component={AddressScreen}
           options={{ headerShown: false }}

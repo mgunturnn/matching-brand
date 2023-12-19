@@ -625,7 +625,7 @@ const HomeScreen = () => {
                   <Entypo name="location-pin" size={24} color="black" />
                 </View>
 
-                <Text style={{ width: 130, fontSize: 13, textAlign: "center" }}>
+                <Text numberOfLines={1} style={{ width: 130, fontSize: 13, textAlign: "center" }}>
                   {item?.houseNo}, {item?.landmark}
                 </Text>
                 {/*numberOfLines={1}*/}
