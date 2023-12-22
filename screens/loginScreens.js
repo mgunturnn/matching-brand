@@ -21,6 +21,7 @@ const loginScreens = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  // const [loading, setLoading] = useState(false)
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
@@ -29,12 +30,16 @@ const loginScreens = () => {
         if (token) {
           navigation.replace("Main");
         }
+
       } catch (err) {
         console.log("error message", err);
       }
     };
     checkLoginStatus();
   }, []);
+  // if(!loading) {
+  //   return <SplashScreen />
+  // }
   const handleLogin = () => {
     const user = {
       email: email,

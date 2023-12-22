@@ -201,8 +201,8 @@ app.post("/orders", async (req, res) => {
 
     // create an array of product object from the cart item
     const products = cartItems.map((item) => ({
-      name: item?.name,
-      quantity: item?.quantity,
+      name: item?.title,
+      quantity: item.quantity,
       price: item.price,
       image: item?.image,
     }));
@@ -218,9 +218,43 @@ app.post("/orders", async (req, res) => {
 
     await order.save();
 
-    res.status(200).json({message:"Order created successfully!"})
+    res.status(200).json({ message: "Order created successfully!" });
   } catch (error) {
     console.log("error creating order", error);
     res.status(500).json({ message: "Error creating order" });
+  }
+});
+
+// get the user profile
+app.get("/profile/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving user profile!" });
+  }
+});
+
+// endpoint to get all the orders of a particular user
+app.get("/orders/:userId", async (req, res) => {
+  try{
+    const userId = req.params.userId;
+
+    const orders = await Order.find({user:userId}).populate("user")
+    
+    if(!orders || orders.length === 0){
+      return res.status(404).json({message: "no orders found for this user!"});
+    }
+
+    res.status(200).json({ orders })
+  } catch(error){
+    res.status(500).json({ message: "Error retrieving orders!" });
   }
 });

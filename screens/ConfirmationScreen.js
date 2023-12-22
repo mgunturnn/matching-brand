@@ -4,7 +4,9 @@ import axios from "axios";
 import { UserType } from "../UserContext";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { cleanCart } from "../redux/CartReducer";
+import { useNavigation } from "@react-navigation/native";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -13,6 +15,7 @@ const ConfirmationScreen = () => {
     { title: "Payment", content: "Payment Details" },
     { title: "Place Order", content: "Order Summary" },
   ];
+  const navigation = useNavigation();
   const [currentStep, setCurrentStep] = useState(0);
   const [addresses, setAddresses] = useState([]);
   const { userId, setUserId } = useContext(UserType);
@@ -36,9 +39,35 @@ const ConfirmationScreen = () => {
       console.log("error", error);
     }
   };
+  const dispatch = useDispatch();
   const [selectedAddress, setSelectedAddress] = useState("");
   const [option, setOption] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const handlePlaceOrder = async () => {
+    try {
+      const orderData = {
+        userId: userId,
+        cartItems: cart,
+        totalPrice: total,
+        shippingAddress: selectedAddress,
+        paymentMethod: selectedOption,
+      };
+
+      const response = await axios.post(
+        "http://192.168.246.243:8000/orders",
+        orderData
+      );
+      if (response.status === 200) {
+        navigation.navigate("Order");
+        dispatch(cleanCart());
+        console.log("Order created successfully", response.data.order);
+      } else {
+        console.log("error creating order", response.data);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <ScrollView style={{ marginTop: 55 }}>
@@ -490,6 +519,7 @@ const ConfirmationScreen = () => {
           </View>
 
           <Pressable
+            onPress={handlePlaceOrder}
             style={{
               backgroundColor: "#BDD1C5",
               padding: 10,
