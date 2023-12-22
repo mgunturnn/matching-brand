@@ -25,7 +25,7 @@ const AddAddressScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.33.243:8000/addresses/${userId}`
+        `http://192.168.246.243:8000/addresses/${userId}`
       );
       const { addresses } = response.data;
 
@@ -104,6 +104,7 @@ const AddAddressScreen = () => {
               style={{
                 borderWidth: 1,
                 borderColor: "#D0D0D0",
+                borderRadius: 10,
                 padding: 10,
                 flexDirection: "column",
                 gap: 5,

@@ -28,31 +28,31 @@ const HomeScreen = () => {
     {
       id: "0",
       image:
-        "https://i.pinimg.com/550x/f2/1b/61/f21b6136325ccda55e99b6db131bb716.jpg",
+        "https://imgdb.net/storage/uploads/bcbe58e400ed5d340e611a91d7241a889f5cb32d26772b5e5470a2e5f0e2d3b2.png",
       name: "Cloths",
     },
     {
       id: "1",
       image:
-        "https://w7.pngwing.com/pngs/315/659/png-transparent-white-cap-red-rojo-blanco-blue-army-blue-white-hat.png",
+        "https://imgdb.net/storage/uploads/820f12f04cc98187e3b6fc15082c1e55e221964ee01298d4f802526c33f53339.png",
       name: "Hats",
     },
     {
       id: "3",
       image:
-        "https://img2.pngdownload.id/20180629/zf/kisspng-jeans-t-shirt-slim-fit-pants-pocket-skinny-5b36305d088056.9928884815302779810348.jpg",
+        "https://imgdb.net/storage/uploads/5c123424d208b8fadff74fdcbf4d3db5ab635f13c02cb1c839f7d51cb464caf9.png",
       name: "Pants",
     },
     {
       id: "4",
       image:
-        "https://e7.pngegg.com/pngimages/22/777/png-clipart-t-shirt-tracksuit-clothing-jacket-t-shirt-white-black-white.png",
+        "https://imgdb.net/storage/uploads/3717215b17d4536cebbd0044672ba66a662159a8a1695b9aa9b928932a9dd5a5.png",
       name: "Jackets",
     },
     {
       id: "5",
       image:
-        "https://png.pngtree.com/png-vector/20201224/ourmid/pngtree-black-and-white-trend-sneakers-product-display-png-image_2603850.jpg",
+        "https://imgdb.net/storage/uploads/0d738b3fe1f043c33bfe8aeb47674a888f08e5a67b92921f9bcfbc58ff3b139f.png",
       name: "Shoes",
     },
   ];
@@ -272,7 +272,7 @@ const HomeScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.33.243:8000/addresses/${userId}`
+        `http://192.168.246.243:8000/addresses/${userId}`
       );
       const { addresses } = response.data;
 
@@ -361,6 +361,8 @@ const HomeScreen = () => {
                 <Text style={{fontSize:13, fontWeight: "500"}}>Deliver to Bandung, Jawa Barat</Text>
               )}
             </Pressable>
+
+            <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
           </Pressable>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -374,7 +376,7 @@ const HomeScreen = () => {
                 }}
               >
                 <Image
-                  style={{ width: 70, height: 70, resizeMode: "contain" }}
+                  style={{ width: 50, height: 50, resizeMode: "contain" }}
                   source={{ uri: item.image }}
                 />
 
