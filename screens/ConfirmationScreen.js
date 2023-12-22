@@ -61,6 +61,7 @@ const ConfirmationScreen = () => {
         navigation.navigate("Order");
         dispatch(cleanCart());
         console.log("Order created successfully", response.data.order);
+        setCurrentStep(0);
       } else {
         console.log("error creating order", response.data);
       }
@@ -375,7 +376,7 @@ const ConfirmationScreen = () => {
               />
             )}
 
-            <Text>Credit or Debit Cart</Text>
+            <Text>Credit or Debit Cart (No Available at This Moment)</Text>
           </View>
           <Pressable
             onPress={() => setCurrentStep(3)}

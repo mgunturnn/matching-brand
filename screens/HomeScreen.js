@@ -17,7 +17,7 @@ import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { SliderBox } from "react-native-image-slider-box";
 import axios from "axios";
 import ProductItem from "../components/ProductItem";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -281,6 +281,12 @@ const HomeScreen = () => {
       console.log("error", error);
     }
   };
+  // refresh the addresses when we navigate back
+  useFocusEffect(
+    useCallback(() => {
+      fetchAddresses();
+    }, [])
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -358,7 +364,9 @@ const HomeScreen = () => {
                   Deliver to {selectedAddress?.name} - {selectedAddress?.street}
                 </Text>
               ) : (
-                <Text style={{fontSize:13, fontWeight: "500"}}>Deliver to Bandung, Jawa Barat</Text>
+                <Text style={{ fontSize: 13, fontWeight: "500" }}>
+                  Add a Address
+                </Text>
               )}
             </Pressable>
 
@@ -603,7 +611,7 @@ const HomeScreen = () => {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {addresses?.map((item, index) => (
               <Pressable
-              onPress={() => setSelectedAddress(item)}
+                onPress={() => setSelectedAddress(item)}
                 style={{
                   width: 140,
                   height: 140,
@@ -615,7 +623,8 @@ const HomeScreen = () => {
                   gap: 3,
                   marginRight: 15,
                   marginTop: 10,
-                  backgroundColor: selectedAddress === item ? "#FBCEB1" : "white"
+                  backgroundColor:
+                    selectedAddress === item ? "#FBCEB1" : "white",
                 }}
               >
                 <View
@@ -627,7 +636,10 @@ const HomeScreen = () => {
                   <Entypo name="location-pin" size={24} color="black" />
                 </View>
 
-                <Text numberOfLines={1} style={{ width: 130, fontSize: 13, textAlign: "center" }}>
+                <Text
+                  numberOfLines={1}
+                  style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                >
                   {item?.houseNo}, {item?.landmark}
                 </Text>
                 {/*numberOfLines={1}*/}
