@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { BottomModal, SlideAnimation, ModalContent } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserType } from "../UserContext";
+import jwt_decode from "jwt-decode";
 
 const HomeScreen = () => {
   const list = [
@@ -58,15 +59,15 @@ const HomeScreen = () => {
   ];
   const images = [
     "https://img.freepik.com/premium-vector/big-seasonal-final-sale-text-special-offer-celebrate-background-with-gold-pink-air-balloons-realistic-vector-stock-design-shop-sale-banners-grand-opening-party-flyer_505557-4790.jpg",
-    "https://img.freepik.com/free-photo/discount-purse-podium_23-2150165496.jpg",
+    "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/big-sale-banner-design-template-7a455468cdb295f8b7320d6b492c7105_screen.jpg?ts=1602781632",
   ];
   // must edited
   const deals = [
     {
       id: "20",
       title: "AIRism Katun T-Shirt Oversize Garis (Lengan Half)",
-      oldPrice: 249000,
-      price: 249000,
+      oldPrice: 20,
+      price: 20,
       image:
         "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/468563/item/goods_35_468563.jpg?width=750",
       carouselImages: [
@@ -80,8 +81,8 @@ const HomeScreen = () => {
     {
       id: "30",
       title: "Kemeja Brushed Lembut Kotak Lengan Panjang",
-      oldPrice: 299000,
-      price: 299000,
+      oldPrice: 25,
+      price: 25,
       image:
         "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/463483/item/goods_34_463483.jpg?width=750",
       carouselImages: [
@@ -96,8 +97,8 @@ const HomeScreen = () => {
     {
       id: "40",
       title: "AIRism Atasan  Tanpa Lengan",
-      oldPrice: 299000,
-      price: 299000,
+      oldPrice: 25,
+      price: 25,
       image:
         "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/455341/sub/goods_455341_sub14.jpg?width=750",
       carouselImages: [
@@ -112,8 +113,8 @@ const HomeScreen = () => {
     {
       id: "50",
       title: "Rok Model Celana Rapi (Kotak)",
-      oldPrice: 299000,
-      price: 299000,
+      oldPrice: 23,
+      price: 23,
       image:
         "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/464912/sub/goods_464912_sub14.jpg?width=750",
       carouselImages: [
@@ -132,8 +133,8 @@ const HomeScreen = () => {
       id: "0",
       title: "AIRism Katun T-Shirt Lengan Pendek",
       offer: "20%",
-      oldPrice: 170000,
-      price: 126000,
+      oldPrice: 15,
+      price: 12,
       image:
         "https://image.uniqlo.com/UQ/ST3/id/imagesgoods/457939/item/idgoods_71_457939.jpg?width=750",
       carouselImages: [
@@ -149,8 +150,8 @@ const HomeScreen = () => {
       id: "1",
       title: "Jeans Ultra Stretch (Skinny Fit)",
       offer: "40%",
-      oldPrice: 300000,
-      price: 180000,
+      oldPrice: 25,
+      price: 20,
       image:
         "https://image.uniqlo.com/UQ/ST3/eu/imagesgoods/455472/item/eugoods_61_455472.jpg?width=450&impolicy=quality_70",
       carouselImages: [
@@ -164,8 +165,8 @@ const HomeScreen = () => {
       id: "2",
       title: "T-Shirt Dolman Lengan 3/4",
       offer: "20%",
-      oldPrice: 150000,
-      price: 120000,
+      oldPrice: 15,
+      price: 12,
       image:
         "https://iora.online/sg/wp-content/uploads/ATB-8735-LONG-SLEEVES-BLOUSE-PINK.jpg",
       carouselImages: [
@@ -179,9 +180,9 @@ const HomeScreen = () => {
     {
       id: "3",
       title: "UT Sanrio Characters Lengan Pendek",
-      offer: "40%",
-      oldPrice: 24999,
-      price: 19999,
+      offer: "10%",
+      oldPrice: 10,
+      price: 9,
       image:
         "https://image.uniqlo.com/UQ/ST3/id/imagesgoods/465715/item/idgoods_00_465715.jpg?width=750",
       carouselImages: [
@@ -197,8 +198,8 @@ const HomeScreen = () => {
       id: "4",
       title: "Pakaian Dalam Boxer Katun (Pinggang Rendah)",
       offer: "10%",
-      oldPrice: 99990,
-      price: 89990,
+      oldPrice: 10,
+      price: 9,
       image:
         "https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/461017/item/goods_69_461017.jpg?width=750",
       carouselImages: [
@@ -214,8 +215,8 @@ const HomeScreen = () => {
       id: "5",
       title: "Jaket AirSense (Serupa Wol)",
       offer: "10%",
-      oldPrice: 899990,
-      price: 799990,
+      oldPrice: 70,
+      price: 63,
       image:
         "https://image.uniqlo.com/UQ/ST3/id/imagesgoods/461912/sub/idgoods_461912_sub4.jpg?width=750",
       carouselImages: [
@@ -288,6 +289,7 @@ const HomeScreen = () => {
     }, [])
   );
 
+  // get userId from authToken
   useEffect(() => {
     const fetchUser = async () => {
       const token = await AsyncStorage.getItem("authToken");
@@ -298,6 +300,7 @@ const HomeScreen = () => {
 
     fetchUser();
   }, []);
+  console.log("user", userId);
 
   // console.log(userId);
   // console.log("addresses", addresses);
@@ -312,7 +315,7 @@ const HomeScreen = () => {
         }}
       >
         <View style={{ alignItems: "center" }}>
-          <Image style={{ width: 110, height: 75 }} source={logo} />
+          <Image style={{ width: 175, height: 75 }} source={logo} />
         </View>
         <ScrollView>
           <View
@@ -502,7 +505,7 @@ const HomeScreen = () => {
 
                 <View
                   style={{
-                    backgroundColor: "#E31837",
+                    backgroundColor: "#D4A29C",
                     paddingVertical: 5,
                     width: 130,
                     justifyContent: "center",
@@ -520,7 +523,7 @@ const HomeScreen = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    {item?.offer}
+                    {item?.offer} Off
                   </Text>
                 </View>
               </Pressable>
@@ -551,7 +554,7 @@ const HomeScreen = () => {
                 marginBottom: open ? 120 : 15,
               }}
               open={open}
-              value={category} //genderValue
+              // value={category} //genderValue
               items={items}
               setOpen={setOpen}
               setValue={setCategory}

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Pressable,
   TextInput,
+  Image,
 } from "react-native";
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,6 +14,7 @@ import { Entypo } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { UserType } from "../UserContext";
 import axios from "axios";
+import logo from "../assets/logobaru.png";
 
 const AddAddressScreen = () => {
   const navigation = useNavigation();
@@ -43,16 +45,8 @@ const AddAddressScreen = () => {
   console.log("addresses", addresses);
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 50 }}>
-      
-      <View
-        style={{
-          backgroundColor: "#D3A29D",
-          padding: 20,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Pressable
+      <View>
+        {/* <Pressable
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -72,7 +66,10 @@ const AddAddressScreen = () => {
             color="#FFFFFF"
           />
           <TextInput style={{ color: "#FFFFFF" }} placeholder="Search" />
-        </Pressable>
+        </Pressable> */}
+        <View style={{ alignItems: "center" }}>
+          <Image style={{ width: 175, height: 75 }} source={logo} />
+        </View>
       </View>
 
       <View style={{ padding: 10 }}>
@@ -140,7 +137,14 @@ const AddAddressScreen = () => {
                 Pos Code: {item?.postalCode}
               </Text>
 
-              <View style={{flexDirection:"row", alignItems:"center", gap:10, marginTop:7}}>  
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                  marginTop: 7,
+                }}
+              >
                 <Pressable
                   style={{
                     backgroundColor: "F5F5F5",

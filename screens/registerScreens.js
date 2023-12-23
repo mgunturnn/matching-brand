@@ -34,13 +34,15 @@ const registerScreens = () => {
       .post("http://192.168.246.243:8000/register", user)
       .then((response) => {
         console.log(response);
+        navigation.replace("Login");
         Alert.alert("Registrasi Sukses!");
         setEmail("");
-        setEmail("");
         setPassword("");
+        setName("");
       })
       .catch((error) => {
         Alert.alert("Registrasi Gagal!");
+        navigation.replace("Login");
         console.log(error);
       });
   };

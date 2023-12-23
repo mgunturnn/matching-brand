@@ -40,14 +40,15 @@ const ProfileScreen = () => {
             marginRight: 12,
           }}
         >
-          <Ionicons name="notifications-outline" size={24} color="black" />
+          <Ionicons name="notifications-outline" size={24} color="white" />
 
-          <AntDesign name="search1" size={24} color="black" />
+          <AntDesign name="search1" size={24} color="white" />
         </View>
       ),
     });
   }, []);
   const [user, setUser] = useState();
+  console.log(userId);
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -106,7 +107,7 @@ const ProfileScreen = () => {
         <Pressable
           style={{
             padding: 10,
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "#BDD1C5",
             borderRadius: 25,
             flex: 1,
           }}
@@ -117,7 +118,7 @@ const ProfileScreen = () => {
         <Pressable
           style={{
             padding: 10,
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "#BDD1C5",
             borderRadius: 25,
             flex: 1,
           }}
@@ -137,7 +138,7 @@ const ProfileScreen = () => {
         <Pressable
           style={{
             padding: 10,
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "#BDD1C5",
             borderRadius: 25,
             flex: 1,
           }}
@@ -149,12 +150,12 @@ const ProfileScreen = () => {
           onPress={logout}
           style={{
             padding: 10,
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "#A26360",
             borderRadius: 25,
             flex: 1,
           }}
         >
-          <Text style={{ textAlign: "center" }}>Logout</Text>
+          <Text style={{ textAlign: "center", color:"white" }}>Logout</Text>
         </Pressable>
       </View>
 

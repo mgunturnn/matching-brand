@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 import { UserType } from "../UserContext";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { cleanCart } from "../redux/CartReducer";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import jwt_decode from "jwt-decode";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -24,6 +25,27 @@ const ConfirmationScreen = () => {
   const total = cart
     ?.map((item) => item.price * item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
+
+  // get userId from authToken
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+  console.log("user", userId);
+
+  // refresh the addresses when we navigate back
+  useFocusEffect(
+    useCallback(() => {
+      fetchAddresses();
+    }, [])
+  );
+
   useEffect(() => {
     fetchAddresses();
   }, []);
@@ -41,6 +63,7 @@ const ConfirmationScreen = () => {
   };
   const dispatch = useDispatch();
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [selectedDelivery, setSelectedDelivery] = useState("");
   const [option, setOption] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const handlePlaceOrder = async () => {
@@ -246,15 +269,16 @@ const ConfirmationScreen = () => {
                       <Pressable
                         onPress={() => setCurrentStep(1)}
                         style={{
-                          backgroundColor: "#A36361",
+                          backgroundColor: "#BDD1C5",
                           padding: 10,
+                          marginRight: 30,
                           borderRadius: 20,
                           justifyContent: "center",
                           alignItems: "center",
                           marginTop: 10,
                         }}
                       >
-                        <Text style={{ textAlign: "center", color: "white" }}>
+                        <Text style={{ textAlign: "center", color: "black" }}>
                           Deliver to This Address
                         </Text>
                       </Pressable>
@@ -283,13 +307,13 @@ const ConfirmationScreen = () => {
               borderColor: "#D0D0D0",
               borderWidth: 1,
               marginTop: 10,
+              borderRadius: 10,
             }}
           >
             {option ? (
               <FontAwesome5 name="dot-circle" size={20} color="#A36361" />
             ) : (
               <Entypo
-                // onPress={() => setSelectedAddress(item)}
                 onPress={() => setOption(!option)}
                 name="circle"
                 size={20}
@@ -305,7 +329,24 @@ const ConfirmationScreen = () => {
             </Text>
           </View>
 
-          <Pressable
+          <View style={{paddingTop:15}}>
+            {option && (
+              <Pressable
+                onPress={() => setCurrentStep(2)}
+                style={{
+                  backgroundColor: "#BDD1C5",
+                  padding: 10,
+                  borderRadius: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "black", fontSize: 15 }}>Continue</Text>
+              </Pressable>
+            )}
+          </View>
+
+          {/* <Pressable
             onPress={() => setCurrentStep(2)}
             style={{
               backgroundColor: "#A36361",
@@ -317,7 +358,7 @@ const ConfirmationScreen = () => {
             }}
           >
             <Text style={{ color: "white" }}>Continue</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       )}
 
@@ -381,7 +422,7 @@ const ConfirmationScreen = () => {
           <Pressable
             onPress={() => setCurrentStep(3)}
             style={{
-              backgroundColor: "#A36361",
+              backgroundColor: "#BDD1C5",
               padding: 10,
               borderRadius: 20,
               justifyContent: "center",
@@ -389,7 +430,7 @@ const ConfirmationScreen = () => {
               marginTop: 15,
             }}
           >
-            <Text style={{ color: "white" }}>Continue</Text>
+            <Text style={{ color: "black" }}>Continue</Text>
           </Pressable>
         </View>
       )}
@@ -480,7 +521,7 @@ const ConfirmationScreen = () => {
                 Tax
               </Text>
 
-              <Text style={{ color: "gray", fontSize: 16 }}>$1</Text>
+              <Text style={{ color: "gray", fontSize: 16 }}>$0</Text>
             </View>
 
             <View
@@ -498,7 +539,7 @@ const ConfirmationScreen = () => {
               <Text
                 style={{ color: "#C60C30", fontSize: 17, fontWeight: "bold" }}
               >
-                ${total + 1}
+                ${total}
               </Text>
             </View>
           </View>

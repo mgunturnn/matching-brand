@@ -56,7 +56,7 @@ const loginScreens = () => {
         navigation.replace("Main");
       })
       .catch((error) => {
-        Alert.alert("Failed to Login", "Password or Email is Incorrect");
+        Alert.alert("Failed to Login", "Password or Email is Incorrect","or your account isn't verified yet");
         console.log(error);
       });
   };

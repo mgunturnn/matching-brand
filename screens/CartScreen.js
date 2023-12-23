@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   Image,
+  Alert,
 } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -35,6 +36,13 @@ const CartScreen = () => {
     dispatch(removeFromCart(item));
   };
   const navigation = useNavigation();
+  const handleConfirm = async () => {
+    if (cart.length !== 0) {
+      navigation.navigate("Confirm");
+    } else {
+      Alert.alert("Your cart is empty!");
+    }
+  }
 
   return (
     <>
@@ -103,11 +111,12 @@ const CartScreen = () => {
         <Text style={{ marginHorizontal: 10 }}>EMI details available</Text>
 
         <Pressable
-          onPress={() => navigation.navigate("Confirm")}
+          // onPress={() => navigation.navigate("Confirm")}
+          onPress={handleConfirm}
           style={{
-            backgroundColor: "#FFC72C",
+            backgroundColor: "#BDD1C5",
             padding: 10,
-            borderRadius: 5,
+            borderRadius: 20,
             justifyContent: "center",
             alignItems: "center",
             marginHorizontal: 10,

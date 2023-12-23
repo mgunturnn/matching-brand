@@ -48,7 +48,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     from: "amazon.com",
     to: email,
     subject: "Email",
-    text: `Silakan klik link berikut untuk memverifikasi akun email Anda!: http://localhost:8000/verify/${verificationToken}`,
+    text: `Silakan klik link berikut untuk memverifikasi akun email Anda!: http://192.168.246.243:8000/verify/${verificationToken}`,
   };
 
   //send the email
@@ -137,6 +137,10 @@ app.post("/login", async (req, res) => {
     //check if the password is correct
     if (user.password !== password) {
       return res.status(401).json({ message: "Password Salah" });
+    }
+
+    if(user.verified !== true) {
+      return res.status(401).json({ message: "Email belum diverifikasi!" })
     }
 
     //generate a token

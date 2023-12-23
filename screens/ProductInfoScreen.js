@@ -154,11 +154,11 @@ const ProductInfoScreen = () => {
         </Text>
 
         <Text style={{ fontSize: 18, fontWeight: "600", marginTop: 6 }}>
-          Rp. {route?.params?.price}
+          $ {route?.params?.oldPrice}
         </Text>
       </View>
 
-      <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
+      <Text style={{ height: 1, borderColor: "#BDD1C5", backgroundColor: "#BDD1C5", borderWidth: 1 }} />
 
       <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
         <Text>Color: </Text>
@@ -174,7 +174,7 @@ const ProductInfoScreen = () => {
         </Text>
       </View>
 
-      <Text style={{ height: 1, borderColor: "#D0D0D0", borderWidth: 1 }} />
+      <Text style={{ height: 1, borderColor: "#BDD1C5", backgroundColor: "#BDD1C5", borderWidth: 1 }} />
 
       <View style={{ padding: 10 }}>
         <Text style={{ fontSize: 15, fontWeight: "bold", marginVertical: 5 }}>
@@ -207,8 +207,9 @@ const ProductInfoScreen = () => {
       <Pressable
         onPress={() => addItemToCart(route?.params?.item)} // edited at critoe
         style={{
-          borderColor:"#A36361",
-          borderWidth:1,
+          borderColor:"#BDD1C5",
+          backgroundColor:'white',
+          borderWidth:2, 
           padding: 10,
           borderRadius: 20,
           justifyContent: "center",
@@ -218,7 +219,7 @@ const ProductInfoScreen = () => {
         }}
       >
       {addedToCart ? (
-        <View>
+        <View >
           <Text>Added to Cart</Text>
         </View>
       ) : (
@@ -228,7 +229,7 @@ const ProductInfoScreen = () => {
 
       <Pressable
         style={{
-          backgroundColor: "#A36361",
+          backgroundColor: "#BDD1C5",
           padding: 10,
           borderRadius: 20,
           justifyContent: "center",
@@ -237,7 +238,7 @@ const ProductInfoScreen = () => {
           marginVertical: 10,
         }}
       >
-        <Text style={{color:"white"}}>Buy Now</Text>
+        <Text style={{color:"black"}}>Buy Now</Text>
       </Pressable>
     </ScrollView>
   );
